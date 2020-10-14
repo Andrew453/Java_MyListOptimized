@@ -109,6 +109,107 @@ public class MyList<T> implements Collection<T> {
 
     @Override
     public boolean add(T t) {
+        Node<T> link = new Node<>(t);
+        if(root == null) {
+            this.root = link;
+            this.counter++;
+            return true;
+        } else {
+            end().setNode(link);
+            this.counter++;
+        }
+        return false;
+    }
+    public Node<T> end() {
+        if (this.root == null)
+            return null;
+        Node<T> iter = this.root;
+        while (iter.hasNext()) {
+            iter = iter.getNode();
+        }
+        return iter;
+    }
+    public String toString() {
+        String result = "[";
+        if (this.root == null)
+            return null;
+        else {
+            Node<T> iter = this.root;
+            while (iter.hasNext()) {
+                result += iter.toString() + ", ";
+                iter = iter.getNode();
+            }
+            result += iter.toString();
+        }
+        result += " ]";
+        return result;
+    }
+    public Node<T> indexAt( int index) {
+        if((index <= this.counter - 1) && (index >= 0)) {
+            Node<T> iter = this.root;
+            for(int i=0;i < index; ++i) {
+                iter = iter.getNode();
+            }
+            return iter;
+        }
+        return null;
+    }
+
+    public void swap(int firstPos, int secondPos){
+
+        if (firstPos > secondPos) {
+            int tmp = firstPos;
+            firstPos = secondPos;
+            secondPos = tmp;
+        }
+        if (firstPos >= 0) {
+            Node<T> lp = indexAt(firstPos - 1);
+            Node<T> first = indexAt(firstPos);
+            Node<T> rp = indexAt(firstPos + 1);
+            Node<T> lq = indexAt(secondPos - 1);
+            Node<T> second = indexAt(secondPos);
+            Node<T> rq = indexAt(secondPos + 1);
+
+            if (lp != null) {
+                lp.setNode(second);
+            }
+            else {
+                this.root = second;
+            }
+
+            first.setNode(rq);
+
+            if (lq == first) {
+                second.setNode(first);
+            }
+            else {
+                second.setNode(rp);
+                lq.setNode(first);
+            }
+        }
+    }
+
+    public void sort() {
+        int k = 0;
+        Node<T> one;
+        Node<T> two;
+        boolean thatsAll = true;
+        while (thatsAll) {
+            for (int i = 1; i <= this.counter - 1; i++) {
+                one = indexAt(i - 1);
+                two = indexAt(i);
+                if (comp.compare(one,two) == 1) {
+                    swap(i - 1, i);
+                    k++;
+                }
+
+            }
+            if (k == 0)
+                thatsAll = false;
+            k = 0;
+
+        }
+    }
 
 
     @Override
